@@ -12,6 +12,7 @@
 
 #include "ssl_md5.h"
 #include "ssl_des.h"
+#include "ssl_rsa.h"
 
 void	exec_opt_p(t_args *args)
 {
@@ -88,8 +89,13 @@ void	exec_opt_s(t_args *args)
 
 void	exec_command(t_args args)
 {
-	exec_opt_p(&args);
-	exec_opt_s(&args);
-	exec_files(&args);
-	free_args(&args);
+	if (args.command == GENRSA)
+		genrsa();
+	else
+	{
+		exec_opt_p(&args);
+		exec_opt_s(&args);
+		exec_files(&args);
+		free_args(&args);
+	}
 }

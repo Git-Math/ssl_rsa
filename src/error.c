@@ -12,6 +12,7 @@
 
 #include "ssl_md5.h"
 #include "ssl_des.h"
+#include "ssl_rsa.h"
 
 void	error0(enum e_error e, char *s)
 {
@@ -21,7 +22,8 @@ void	error0(enum e_error e, char *s)
 	{
 		ft_putsterr("ft_ssl: Error: '");
 		ft_putsterr(s);
-		ft_putsterr("' is an invalid command.\n\nStandard commands :\n\n\
+		ft_putsterr("' is an invalid command.\n\nStandard commands :\n\
+genrsa\nrsa\nrsault\n\n\
 Message Digest commands :\nmd5\nsha224\nsha256\nsha384\nsha512\n\n\
 Cipher commands:\nbase64\ndes\ndes-ecb\ndes-cbc\ndes_pcbc\ndes-cfb\n\
 des-ofb\ndes3\ndes3-ecb\ndes3-cbc\ndes3_pcbc\ndes3-cfb\ndes3-ofb\n");
@@ -44,6 +46,7 @@ void	error(enum e_error e, char *s)
 {
 	error_des(e, s);
 	error0(e, s);
+	error_rsa(e, s);
 	if (e == OPT_S_NO_DATA)
 		ft_putsterr("ft_ssl: Error: option -s with no data.\n\n\
 usage: ft_ssl command -s \"exemple\"\n");

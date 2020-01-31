@@ -52,6 +52,8 @@ void	get_opts(int ac, char **av, t_args *args, int *i)
 		error(INVALID_BASE64_OPTS, av[*i]);
 	if (args->command >= DES_ECB && *i < ac)
 		error(INVALID_DES_OPTS, av[*i]);
+	if (args->command == GENRSA && *i < ac)
+		error(INVALID_GENRSA_OPTS, av[*i]);
 	if (*i == ac && !(args->opts & OPT_S) && !(args->opts & OPT_I))
 		args->opts = args->opts | OPT_NO;
 }

@@ -13,6 +13,14 @@
 #include "ssl_md5.h"
 #include "ssl_des.h"
 
+void	get_command_rsa(char **av, t_args *args)
+{
+	if (ft_strlen(av[1]) == 6 && !ft_memcmp(av[1], "genrsa", 6))
+		args->command = GENRSA;
+	else
+		error(INVALID_COMMAND, av[1]);
+}
+
 void	get_command_des(char **av, t_args *args)
 {
 	if (ft_strlen(av[1]) == 7 && !ft_memcmp(av[1], "des-ecb", 7))
@@ -38,5 +46,5 @@ void	get_command_des(char **av, t_args *args)
 	else if (ft_strlen(av[1]) == 8 && !ft_memcmp(av[1], "des3-ofb", 8))
 		args->command = DES3_OFB;
 	else
-		error(INVALID_COMMAND, av[1]);
+		get_command_rsa(av, args);
 }

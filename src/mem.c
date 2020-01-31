@@ -14,6 +14,8 @@
 
 void	set_mem_data(int ac, t_args *args, int *i)
 {
+	if (args->command == GENRSA)
+		return ;
 	args->data_size = ac - *i + args->opt_s_nb;
 	if (args->opts & OPT_P || args->opts & OPT_NO || args->command >= BASE64)
 		args->data_size++;

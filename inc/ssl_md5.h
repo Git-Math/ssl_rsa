@@ -28,6 +28,7 @@ typedef unsigned char		t_bool;
 typedef unsigned int		t_opts;
 typedef unsigned int		t_uint32;
 typedef unsigned long int	t_uint64;
+typedef long int			t_int64;
 
 enum						e_error
 {
@@ -46,7 +47,10 @@ enum						e_error
 	OPT_KPSV_NO_VALUE = 12,
 	OPT_KPSV_TOO_BIG = 13,
 	INVALID_HEX = 14,
-	INVALID_PASSWORD = 15
+	INVALID_PASSWORD = 15,
+	INVALID_GENRSA_OPTS = 16,
+	OPEN_FAILED = 17,
+	GENRSA_KEY_GCD_ERROR = 18
 };
 
 enum						e_command
@@ -66,7 +70,8 @@ enum						e_command
 	DES3_CBC = 12,
 	DES3_PCBC = 13,
 	DES3_CFB = 14,
-	DES3_OFB = 15
+	DES3_OFB = 15,
+	GENRSA = 16
 };
 
 typedef struct s_buffer		t_buffer;
