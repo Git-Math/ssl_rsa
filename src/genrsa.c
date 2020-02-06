@@ -68,18 +68,18 @@ t_uint64	gen_prime(void)
 	return (n);
 }
 
-void	genrsa(void)
+t_buffer	genrsa(void)
 {
-	t_uint64	p;
-	t_uint64	q;
+	t_genrsa	genrsa_struct;
 
 	ft_putstr("Generating RSA private key, 64 bit long modulus\n");
-	p = gen_prime();
+	genrsa_struct.p = gen_prime();
 	ft_putchar('\n');
-	q = p;
-	while (q == p)
-		q = gen_prime();
+	genrsa_struct.q = genrsa_struct.p;
+	while (genrsa_struct.q == genrsa_struct.p)
+		genrsa_struct.q = gen_prime();
 	ft_putchar('\n');
+	genrsa_struct.e = 65537;
 	ft_putstr("e is 65537 (0x10001)\n");
-	genrsa_key(p, q, 65537);
+	return (genrsa_key(genrsa_struct));
 }

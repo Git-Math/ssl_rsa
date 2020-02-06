@@ -41,7 +41,7 @@ t_uint64	gcd_extended(t_uint64 a, t_uint64 b, t_int64 *x, t_int64 *y)
 	*y = x1 - (a / b) * y1;
 	return (gcd);
 }
-#include <stdio.h>
+
 t_uint64	mod_inverse(t_uint64 a, t_uint64 m)
 {
 	t_int64		x;
@@ -49,17 +49,13 @@ t_uint64	mod_inverse(t_uint64 a, t_uint64 m)
 
 	if (gcd_extended(a, m, &x, &y) != 1)
 		error(GENRSA_KEY_GCD_ERROR, "");
-	return (((x % (t_int64)m) + (t_int64)m) % mm);
+	return (((x % (t_int64)m) + (t_int64)m) % m);
 }
 
-void		genrsa_key(t_uint64 p, t_uint64 q, t_uint64 e)
+t_buffer	genrsa_key(t_genrsa genrsa_struct)
 {
-	t_uint64	n;
-	t_uint64	lambda;
-	t_uint64	d;
-
-	n = p * q;
-	lambda = lcm(p - 1, q - 1);
-	d = mod_inverse(e, lambda);
-	printf("p = %lu, q = %lu, n = %lu, lambda = %lu, d = %lu\n", p, q, n, lambda, d);
+	genrsa_struct.n = genrsa_struct.p * genrsa_struct.q;
+	genrsa_struct.l = lcm(genrsa_struct.p - 1, genrsa_struct.q - 1);
+	genrsa_struct.d = mod_inverse(genrsa_struct.e, genrsa_struct.l);
+	return (genrsa_key_buffer(genrsa_struct));
 }

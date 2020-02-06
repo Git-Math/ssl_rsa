@@ -23,7 +23,7 @@ SRC = main.c exec_command.c md5.c print.c set_md5_struct.c	\
         set_des_struct.c des3.c pbkdf.c command.c base640.c	\
 		des_binary.c des_tools.c des_ifp.c					\
 		is_prime.c dispatcher_rsa.c genrsa.c error_rsa.c	\
-		get_args_rsa.c genrsa_key.c
+		get_args_rsa.c genrsa_key.c genrsa_key_buffer.c
 
 OBJ = $(SRC:.c=.o)
 
