@@ -35,5 +35,6 @@ t_uint64					rand_uint64(t_uint64 min, t_uint64 max);
 t_buffer					genrsa(void);
 t_buffer					genrsa_key(t_genrsa genrsa_struct);
 t_buffer					genrsa_key_buffer(t_genrsa genrsa_struct);
+void						print_rsa_key(t_args *args, t_buffer key);
 
 #endif

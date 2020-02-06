@@ -85,5 +85,7 @@ t_buffer					result_finalize(t_buffer result, t_des *des_struct);
 void						des_ip(t_des *des_struct, t_buffer *result);
 void						des_fp_mode(t_des *des_struct, t_buffer *result);
 void						des_fp(t_des *des_struct, t_buffer *result);
+void						print_base64_encode_buffer0(t_args *args, \
+							t_buffer buf);
 
 #endif

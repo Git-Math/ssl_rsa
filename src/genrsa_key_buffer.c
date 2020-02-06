@@ -16,7 +16,8 @@ int			uint64_size(t_uint64 n)
 {
 	t_uint64	size;
 
-	size = ((n == 0) ? 1 : 0) ;
+	size = 1;
+	n >>= 7;
 	while (n != 0)
 	{
 		n >>= 8;
@@ -65,8 +66,8 @@ t_buffer	genrsa_key_buffer(t_genrsa genrsa_struct)
 	key.bytes = (t_byte *)malloc(sizeof(t_byte) * key.size);
 	(key.bytes == NULL) ? error(MALLOC_FAILED, "") : 0;
 	shift = 0;
-	uint64_to_bytes(30, key.bytes + shift);
-	shift += uint64_size(30);
+	uint64_to_bytes(48, key.bytes + shift);
+	shift += uint64_size(48);
 	uint64_to_bytes(key.size - 2, key.bytes + shift);
 	shift += uint64_size(key.size - 2);
 	key_add_uint64(0, key.bytes, &shift);
