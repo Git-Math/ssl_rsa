@@ -12,6 +12,7 @@
 
 #include "ssl_md5.h"
 #include "ssl_des.h"
+#include "ssl_rsa.h"
 
 void	get_command(int ac, char **av, t_args *args)
 {
@@ -40,20 +41,25 @@ void	get_opts(int ac, char **av, t_args *args, int *i)
 	args->i = 0;
 	while (*i < ac && av[*i][0] == '-')
 	{
-		if (ft_strlen(av[*i]) != 2)
+		if (ft_strlen(av[*i]) != 2 && args->command != RSA)
 			error(INVALID_OPTS, av[*i]);
-		if (args->command <= SHA512)
+		if (args->command >= GENRSA)
+			get_opts_rsa(av, args, i);
+		else if (args->command <= SHA512)
 			get_opts_mdc(av, args, i);
 		else if (args->command >= BASE64)
 			get_opts_des(av, args, i);
 		*i += 1;
 	}
+	if (args->command == RSA && *i < ac)
+		error(INVALID_RSA_OPTS, av[*i]);
+	if (args->command == GENRSA && *i < ac)
+		error(INVALID_GENRSA_OPTS, av[*i]);
 	if (args->command == BASE64 && *i < ac)
 		error(INVALID_BASE64_OPTS, av[*i]);
 	if (args->command >= DES_ECB && *i < ac)
 		error(INVALID_DES_OPTS, av[*i]);
-	if (args->command == GENRSA && *i < ac)
-		error(INVALID_GENRSA_OPTS, av[*i]);
+
 	if (*i == ac && !(args->opts & OPT_S) && !(args->opts & OPT_I))
 		args->opts = args->opts | OPT_NO;
 }
@@ -104,7 +110,7 @@ t_args	get_args(int ac, char **av)
 
 	i = 2;
 	get_command(ac, av, &args);
-	get_opts(ac, av, &args, &i);
+	get_opts(ac, av, &args, &i); //TEMP continue rsa fro here
 	set_dispatcher(&args);
 	set_mem_data(ac, &args, &i);
 	get_opts_s(ac, av, &args);

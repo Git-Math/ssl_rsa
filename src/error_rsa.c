@@ -19,7 +19,15 @@ void	error_rsa(enum e_error e, char *s)
 		ft_putsterr("ft_ssl: genrsa: Error: '");
 		ft_putsterr(s);
 		ft_putsterr("' is an invalid option.\n\nOptions :\n-i : input file\n\
-		-o : output file\n");
+-o : output file\n");
+	}
+	else if (e == INVALID_RSA_OPTS)
+	{
+		ft_putsterr("ft_ssl: rsa: Error: '");
+		ft_putsterr(s);
+		ft_putsterr("' is an invalid option.\n\nft_ssl rsa [-inform PEM] \
+[-outform PEM] [-in file] [-passin arg] [-out file] [-passout arg] [-des] \
+[-text] [-noout] [-modulus] [-check] [-pubin] [-pubout]");
 	}
 	else if (e == OPEN_FAILED)
 		ft_putsterr("ft_ssl: Error: open failed.\n");

@@ -12,7 +12,7 @@
 
 #include "ssl_rsa.h"
 
-void	get_opts_rsa(char **av, t_args *args, int *i)
+void	get_opts_genrsa(char **av, t_args *args, int *i)
 {
 	if (av[*i][1] == 'i')
 	{
@@ -26,4 +26,68 @@ void	get_opts_rsa(char **av, t_args *args, int *i)
 	}
 	else
 		error(INVALID_GENRSA_OPTS, av[*i]);
+}
+
+void	get_opts_rsa_c0(char **av, t_args *args, int *i)
+{
+	if (ft_strlen(av[*i]) == 4 && !ft_memcmp(av[*i], "-out", 4))
+	{
+		args->opts = args->opts | OPT_O;
+		*i += 1;
+	}
+	else if (ft_strlen(av[*i]) == 8 && !ft_memcmp(av[*i], "-passout", 8))
+	{
+		args->opts = args->opts | OPT_PASSOUT;
+		*i += 1;
+	}
+	else if (ft_strlen(av[*i]) == 5 && !ft_memcmp(av[*i], "-text", 5))
+		args->opts = args->opts | OPT_TEXT;
+	else if (ft_strlen(av[*i]) == 6 && !ft_memcmp(av[*i], "-noout", 6))
+		args->opts = args->opts | OPT_NOOUT;
+	else if (ft_strlen(av[*i]) == 7 && !ft_memcmp(av[*i], "-modulus", 7))
+		args->opts = args->opts | OPT_MODULUS;
+	else if (ft_strlen(av[*i]) == 6 && !ft_memcmp(av[*i], "-check", 6))
+		args->opts = args->opts | OPT_CHECK;
+	else if (ft_strlen(av[*i]) == 6 && !ft_memcmp(av[*i], "-pubin", 6))
+		args->opts = args->opts | OPT_PUBIN;
+	else if (ft_strlen(av[*i]) == 7 && !ft_memcmp(av[*i], "-pubout", 7))
+		args->opts = args->opts | OPT_PUBOUT;
+	else
+		error(INVALID_GENRSA_OPTS, av[*i]);
+}
+
+void	get_opts_rsa_c(char **av, t_args *args, int *i)
+{
+	if (ft_strlen(av[*i]) == 7 && !ft_memcmp(av[*i], "-inform", 7))
+	{
+		args->opts = args->opts | OPT_INF;
+		*i += 1;
+	}
+	else if (ft_strlen(av[*i]) == 8 && !ft_memcmp(av[*i], "-outform", 8))
+	{
+		args->opts = args->opts | OPT_OUTF;
+		*i += 1;
+	}
+	else if (ft_strlen(av[*i]) == 3 && !ft_memcmp(av[*i], "-in", 3))
+	{
+		args->opts = args->opts | OPT_I;
+		*i += 1;
+	}
+	else if (ft_strlen(av[*i]) == 7 && !ft_memcmp(av[*i], "-passin", 7))
+	{
+		args->opts = args->opts | OPT_PASSIN;
+		*i += 1;
+	}
+	else if (ft_strlen(av[*i]) == 4 && !ft_memcmp(av[*i], "-des", 4))
+		args->opts = args->opts | OPT_DES;
+	else
+		get_opts_rsa_c0(av, args, i);
+}
+
+void	get_opts_rsa(char **av, t_args *args, int *i)
+{
+	if (args->command == GENRSA)
+		get_opts_genrsa(av, args, i);
+	else if (args->command == RSA)
+		get_opts_rsa_c(av, args, i);
 }

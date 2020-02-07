@@ -202,7 +202,7 @@ t_bool		prime_table_check(t_uint64 n, t_bool print_info)
 	i = 0;
 	while (i < 2048)
 	{
-		if ((n % g_prime_table[i]) == 0)
+		if ((n % (t_uint64)g_prime_table[i]) == 0)
 			return (FALSE);
 		i++;
 	}
@@ -260,7 +260,7 @@ t_bool		is_prime(t_uint64 n, double p, t_bool print_info)
 		s++;
 	}
 	current_p = 2;
-	while((1 - current_p) < p)
+	while ((1 - current_p) < p)
 	{
 		if (is_witness(n, rand_uint64(2, n - 2), s, d))
 			return (FALSE);

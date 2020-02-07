@@ -50,7 +50,8 @@ enum						e_error
 	INVALID_PASSWORD = 15,
 	INVALID_GENRSA_OPTS = 16,
 	OPEN_FAILED = 17,
-	GENRSA_KEY_GCD_ERROR = 18
+	GENRSA_KEY_GCD_ERROR = 18,
+	INVALID_RSA_OPTS = 19
 };
 
 enum						e_command
@@ -71,7 +72,8 @@ enum						e_command
 	DES3_PCBC = 13,
 	DES3_CFB = 14,
 	DES3_OFB = 15,
-	GENRSA = 16
+	GENRSA = 16,
+	RSA = 17
 };
 
 typedef struct s_buffer		t_buffer;
@@ -82,21 +84,32 @@ typedef struct s_sha256		t_sha256;
 typedef struct s_sha512		t_sha512;
 
 # define OPT_P				1
-# define OPT_Q				(1 << 1)
-# define OPT_R				(1 << 2)
-# define OPT_S				(1 << 3)
-# define OPT_D				(1 << 4)
-# define OPT_I				(1 << 5)
-# define OPT_O				(1 << 6)
-# define OPT_A				(1 << 7)
-# define OPT_K				(1 << 8)
-# define OPT_PD				(1 << 9)
-# define OPT_SD				(1 << 10)
-# define OPT_V				(1 << 11)
-# define OPT_NO				(1 << 12)
+# define OPT_Q				2
+# define OPT_R				4
+# define OPT_S				8
+# define OPT_D				16
+# define OPT_I				32
+# define OPT_O				64
+# define OPT_A				128
+# define OPT_K				256
+# define OPT_PD				512
+# define OPT_SD				1024
+# define OPT_V				2048
+# define OPT_INF			4096
+# define OPT_OUTF			8192
+# define OPT_PASSIN			16384
+# define OPT_PASSOUT		32768
+# define OPT_DES			65536
+# define OPT_TEXT			131072
+# define OPT_NOOUT			262144
+# define OPT_MODULUS		524288
+# define OPT_CHECK			1048576
+# define OPT_PUBIN			2097152
+# define OPT_PUBOUT			4194304
+# define OPT_NO				8388608
 
-# define DATA_SIZE_MAX		(1 << 20)
-# define FILENAME_SIZE_MAX	(1 << 7)
+# define DATA_SIZE_MAX		1048576
+# define FILENAME_SIZE_MAX	128
 
 struct						s_buffer
 {

@@ -29,7 +29,7 @@ t_uint64	bytes_to_uint64(t_byte *bytes)
 
 t_uint64	rand_uint64(t_uint64 min, t_uint64 max)
 {
-    t_byte		*rand_bytes;
+	t_byte		*rand_bytes;
 	t_uint64	rand_n;
 	int			fd;
 
@@ -40,9 +40,9 @@ t_uint64	rand_uint64(t_uint64 min, t_uint64 max)
 	read(fd, rand_bytes, 8);
 	rand_n = bytes_to_uint64(rand_bytes);
 	rand_n = (rand_n % (max - min + 1)) + min;
-    close(fd);
+	close(fd);
 	free(rand_bytes);
-    return (rand_n);
+	return (rand_n);
 }
 
 t_uint64	gen_prime(void)

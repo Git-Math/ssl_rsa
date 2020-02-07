@@ -13,7 +13,7 @@
 #ifndef SSL_RSA_H
 # define SSL_RSA_H
 
-#include "ssl_md5.h"
+# include "ssl_md5.h"
 
 typedef struct s_genrsa		t_genrsa;
 
@@ -36,5 +36,6 @@ t_buffer					genrsa(void);
 t_buffer					genrsa_key(t_genrsa genrsa_struct);
 t_buffer					genrsa_key_buffer(t_genrsa genrsa_struct);
 void						print_rsa_key(t_args *args, t_buffer key);
+t_uint64					mod_inverse(t_uint64 a, t_uint64 m);
 
 #endif
