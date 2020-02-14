@@ -51,7 +51,14 @@ enum						e_error
 	INVALID_GENRSA_OPTS = 16,
 	OPEN_FAILED = 17,
 	GENRSA_KEY_GCD_ERROR = 18,
-	INVALID_RSA_OPTS = 19
+	INVALID_RSA_OPTS = 19,
+	INVALID_OPT_FORM = 20,
+	OPT_PASS_NO_VALUE = 21,
+	OPT_PASS_TOO_BIG = 22,
+	INVALID_RSA_INPUT_FILE = 23,
+	INVALID_RSA_PEM = 24,
+	INVALID_RSA_ASN1 = 25,
+	PUBIN_CHECK = 26
 };
 
 enum						e_command
@@ -212,6 +219,8 @@ struct						s_args
 	int						i;
 	int						fd;
 	int						opt_s_nb;
+	t_buffer				passin;
+	t_buffer				passout;
 };
 
 t_args						get_args(int ac, char **av);

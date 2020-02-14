@@ -65,6 +65,6 @@ void	set_dispatcher(t_args *args)
 		set_sha384_512_dispatcher(args);
 	else if (args->command == BASE64)
 		set_base64_dispatcher(args);
-	else if (args->command >= DES_ECB)
+	else if (args->command >= DES_ECB && args->command <= DES3_OFB)
 		set_des_dispatcher(args);
 }

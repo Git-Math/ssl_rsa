@@ -91,8 +91,10 @@ void	get_opts_io(int ac, char **av, t_args *args)
 	i = 2;
 	while (i < ac)
 	{
-		if (ft_strlen(av[i]) == 2 && av[i][0] == '-' && (av[i][1] == 'i' \
+		if ((ft_strlen(av[i]) == 2 && av[i][0] == '-' && (av[i][1] == 'i' \
 			|| av[i][1] == 'o'))
+			|| (ft_strlen(av[i]) == 3 && !ft_memcmp(av[i], "-in", 3))
+			|| (ft_strlen(av[i]) == 4 && !ft_memcmp(av[i], "-out", 4)))
 		{
 			i += 1;
 			get_opts_io0(ac, av, args, i);

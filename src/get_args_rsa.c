@@ -44,7 +44,7 @@ void	get_opts_rsa_c0(char **av, t_args *args, int *i)
 		args->opts = args->opts | OPT_TEXT;
 	else if (ft_strlen(av[*i]) == 6 && !ft_memcmp(av[*i], "-noout", 6))
 		args->opts = args->opts | OPT_NOOUT;
-	else if (ft_strlen(av[*i]) == 7 && !ft_memcmp(av[*i], "-modulus", 7))
+	else if (ft_strlen(av[*i]) == 8 && !ft_memcmp(av[*i], "-modulus", 8))
 		args->opts = args->opts | OPT_MODULUS;
 	else if (ft_strlen(av[*i]) == 6 && !ft_memcmp(av[*i], "-check", 6))
 		args->opts = args->opts | OPT_CHECK;
@@ -53,7 +53,7 @@ void	get_opts_rsa_c0(char **av, t_args *args, int *i)
 	else if (ft_strlen(av[*i]) == 7 && !ft_memcmp(av[*i], "-pubout", 7))
 		args->opts = args->opts | OPT_PUBOUT;
 	else
-		error(INVALID_GENRSA_OPTS, av[*i]);
+		error(INVALID_RSA_OPTS, av[*i]);
 }
 
 void	get_opts_rsa_c(char **av, t_args *args, int *i)
@@ -89,5 +89,9 @@ void	get_opts_rsa(char **av, t_args *args, int *i)
 	if (args->command == GENRSA)
 		get_opts_genrsa(av, args, i);
 	else if (args->command == RSA)
+	{
 		get_opts_rsa_c(av, args, i);
+		if ((args->opts & OPT_PUBIN) && (args->opts & OPT_CHECK))
+			error(PUBIN_CHECK, "");
+	}
 }

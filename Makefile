@@ -24,7 +24,8 @@ SRC = main.c exec_command.c md5.c print.c set_md5_struct.c	\
 		des_binary.c des_tools.c des_ifp.c					\
 		is_prime.c dispatcher_rsa.c genrsa.c error_rsa.c	\
 		get_args_rsa.c genrsa_key.c genrsa_key_buffer.c		\
-		print_rsa_key.c
+		print_rsa_key.c get_opts_rsa.c rsa.c decode_pem.c	\
+		print_rsa.c
 
 OBJ = $(SRC:.c=.o)
 

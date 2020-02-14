@@ -60,8 +60,8 @@ void	error_des(enum e_error e, char *s)
 -v : initialization vector in hex is the next argument\n");
 	}
 	else if (e == OPT_IO_NO_FILE)
-		ft_putsterr("ft_ssl: Error: option -i or -o with no file name.\n\n\
-usage: ft_ssl command -i input_file.txt -o output_file.txt\n");
+		ft_putsterr("ft_ssl: Error: option -i(n) or -o(ut) with no file name.\n\
+\nusage: ft_ssl command -i(n) input_file.txt -o(ut) output_file.txt\n");
 	else
 		error_des0(e);
 }

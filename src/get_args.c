@@ -59,7 +59,6 @@ void	get_opts(int ac, char **av, t_args *args, int *i)
 		error(INVALID_BASE64_OPTS, av[*i]);
 	if (args->command >= DES_ECB && *i < ac)
 		error(INVALID_DES_OPTS, av[*i]);
-
 	if (*i == ac && !(args->opts & OPT_S) && !(args->opts & OPT_I))
 		args->opts = args->opts | OPT_NO;
 }
@@ -110,12 +109,14 @@ t_args	get_args(int ac, char **av)
 
 	i = 2;
 	get_command(ac, av, &args);
-	get_opts(ac, av, &args, &i); //TEMP continue rsa fro here
+	get_opts(ac, av, &args, &i);
 	set_dispatcher(&args);
 	set_mem_data(ac, &args, &i);
 	get_opts_s(ac, av, &args);
 	get_opts_io(ac, av, &args);
 	get_opts_kpsv(ac, av, &args);
+	get_opts_form(ac, av, &args);
+	get_opts_pass(ac, av, &args);
 	get_filenames(ac, av, &args, &i);
 	return (args);
 }
