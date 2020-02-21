@@ -31,7 +31,9 @@ struct						s_genrsa
 struct						s_rsa
 {
 	t_buffer				asn164;
+	t_buffer				asn1_des;
 	t_buffer				asn1;
+	t_buffer				salt;
 	t_uint64				n;
 	t_uint64				e;
 	t_uint64				d;
@@ -50,8 +52,10 @@ t_uint64					rand_uint64(t_uint64 min, t_uint64 max);
 t_buffer					genrsa(void);
 t_buffer					genrsa_key(t_genrsa genrsa_struct);
 t_buffer					genrsa_key_buffer(t_genrsa genrsa_struct);
-void						print_rsa_key(t_args *args, t_buffer key);
-t_uint64					mod_inverse(t_uint64 a, t_uint64 m);
+void						print_rsa_key(t_args *args, t_buffer key, \
+							t_bool is_private, t_bool is_fd_open);
+t_uint64					mod_inverse(t_uint64 a, t_uint64 m, \
+							t_bool handle_error);
 void						get_opts_form(int ac, char **av, t_args *args);
 void						get_opts_pass(int ac, char **av, t_args *args);
 void						rsa(t_args *args);
@@ -61,9 +65,22 @@ void						print_rsa_struct_private(t_args *args, \
 							t_rsa *rsa_struct);
 void						ft_putchar_fd(char c, int fd);
 void						ft_putstr_fd(char *s, int fd);
+void						ft_putuint64_fd(t_uint64 n, int fd);
 void						ft_putuint64_hex_fd(t_uint64 n, t_bool lowercase, \
 							int fd);
 void						print_rsa_struct_public(t_args *args, \
 							t_rsa *rsa_struct);
+void						decode_asn1_private(t_args *args, \
+							t_rsa *rsa_struct);
+void						decode_asn1_public(t_args *args, t_rsa *rsa_struct);
+int							uint64_size(t_uint64 n);
+void						uint64_to_bytes(t_uint64 n, t_byte *bytes);
+void						key_add_uint64(t_uint64 n, t_byte *bytes, \
+							int *shift);
+t_buffer					rsa_public_key_buffer(t_genrsa genrsa_struct);
+void						check_rsa_key(t_args *args, t_rsa *rsa_struct);
+t_uint64					gcd(t_uint64 a, t_uint64 b);
+t_uint64					lcm(t_uint64 a, t_uint64 b);
+t_byte						*rand_bytes(int size);
 
 #endif

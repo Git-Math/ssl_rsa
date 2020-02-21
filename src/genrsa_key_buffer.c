@@ -62,7 +62,7 @@ int			calc_key_size(t_genrsa genrsa_struct)
 		+ uint64_size(genrsa_struct.q) + uint64_size(genrsa_struct.d\
 		% (genrsa_struct.p - 1)) + uint64_size(genrsa_struct.d\
 		% (genrsa_struct.q - 1)) + uint64_size(mod_inverse(genrsa_struct.q,\
-		genrsa_struct.p));
+		genrsa_struct.p, TRUE));
 	return (size);
 }
 
@@ -75,7 +75,7 @@ t_buffer	genrsa_key_buffer(t_genrsa genrsa_struct)
 	key.bytes = (t_byte *)malloc(sizeof(t_byte) * key.size);
 	(key.bytes == NULL) ? error(MALLOC_FAILED, "") : 0;
 	shift = 0;
-	uint64_to_bytes(48, key.bytes + shift);
+	uint64_to_bytes(0x30, key.bytes + shift);
 	shift += 1;
 	uint64_to_bytes(key.size - 2, key.bytes + shift);
 	shift += 1;
@@ -87,7 +87,7 @@ t_buffer	genrsa_key_buffer(t_genrsa genrsa_struct)
 	key_add_uint64(genrsa_struct.q, key.bytes, &shift);
 	key_add_uint64(genrsa_struct.d % (genrsa_struct.p - 1), key.bytes, &shift);
 	key_add_uint64(genrsa_struct.d % (genrsa_struct.q - 1), key.bytes, &shift);
-	key_add_uint64(mod_inverse(genrsa_struct.q, genrsa_struct.p), \
+	key_add_uint64(mod_inverse(genrsa_struct.q, genrsa_struct.p, TRUE), \
 		key.bytes, &shift);
 	return (key);
 }

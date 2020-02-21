@@ -32,6 +32,8 @@ big, size max: 1 048 576.\n");
 	}
 	else if (e == PUBIN_CHECK)
 		ft_putsterr("Only private keys can be checked\n");
+	else if (e == INVALID_RSA_KEY)
+		ft_putsterr("ft_ssl: rsa: Error: invalid rsa key\n");
 }
 
 void	error_rsa(enum e_error e, char *s)

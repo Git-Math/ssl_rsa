@@ -13,7 +13,7 @@
 #include "ssl_rsa.h"
 #include "ssl_des.h"
 
-void	set_data(t_args *args, t_buffer *data)
+void		set_data(t_args *args, t_buffer *data)
 {
 	if (args->opts & OPT_I)
 	{
@@ -36,7 +36,7 @@ void	set_data(t_args *args, t_buffer *data)
 	}
 }
 
-void	set_fd(t_args *args)
+void		set_fd(t_args *args)
 {
 	if (args->opts & OPT_O)
 	{
@@ -54,17 +54,29 @@ void	set_fd(t_args *args)
 		args->fd = 1;
 }
 
-void	rsa(t_args *args)
+void		rsa(t_args *args)
 {
 	t_buffer	data;
 	t_rsa		rsa_struct;
+	t_genrsa	genrsa_struct;
+	t_buffer	key;
 
 	set_data(args, &data);
 	set_fd(args);
 	decode_pem(args, data, &rsa_struct);
 	if (!(args->opts & OPT_NOOUT))
 	{
-		ft_putstr("writing RSA key\n");
-		print_buffer_fd(data, args->fd); //TEMP TODO handle pubin/pubout
+		ft_putsterr("writing RSA key\n");
+		genrsa_struct.n = rsa_struct.n;
+		genrsa_struct.e = rsa_struct.e;
+		genrsa_struct.d = rsa_struct.d;
+		genrsa_struct.p = rsa_struct.p;
+		genrsa_struct.q = rsa_struct.q;
+		key = ((args->opts & OPT_PUBIN) || (args->opts & OPT_PUBOUT)) \
+								? rsa_public_key_buffer(genrsa_struct) \
+								: genrsa_key_buffer(genrsa_struct);
+		print_rsa_key(args, key, \
+			!((args->opts & OPT_PUBIN) || (args->opts & OPT_PUBOUT)), TRUE);
 	}
+	free_args(args);
 }

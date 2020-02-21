@@ -206,7 +206,7 @@ t_bool		prime_table_check(t_uint64 n, t_bool print_info)
 			return (FALSE);
 		i++;
 	}
-	print_info ? ft_putchar('.') : 0;
+	print_info ? ft_putsterr(".") : 0;
 	return (TRUE);
 }
 
@@ -264,7 +264,7 @@ t_bool		is_prime(t_uint64 n, double p, t_bool print_info)
 	{
 		if (is_witness(n, rand_uint64(2, n - 2), s, d))
 			return (FALSE);
-		print_info ? ft_putchar('+') : 0;
+		print_info ? ft_putsterr("+") : 0;
 		current_p = (current_p == -1) ? 1 / 4 : current_p * 1 / 4;
 	}
 	return (TRUE);

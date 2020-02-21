@@ -27,21 +27,29 @@ t_uint64	bytes_to_uint64(t_byte *bytes)
 	return (n);
 }
 
-t_uint64	rand_uint64(t_uint64 min, t_uint64 max)
+t_byte		*rand_bytes(int size)
 {
-	t_byte		*rand_bytes;
-	t_uint64	rand_n;
-	int			fd;
+	t_byte	*rand_b;
+	int		fd;
 
-	rand_bytes = (t_byte *)malloc(sizeof(t_byte) * 8);
-	(rand_bytes == NULL) ? error(MALLOC_FAILED, "") : 0;
+	rand_b = (t_byte *)malloc(sizeof(t_byte) * 8);
+	(rand_b == NULL) ? error(MALLOC_FAILED, "") : 0;
 	fd = open("/dev/urandom", O_RDONLY);
 	(fd < 0) ? error(OPEN_FAILED, "") : 0;
-	read(fd, rand_bytes, 8);
-	rand_n = bytes_to_uint64(rand_bytes);
-	rand_n = (rand_n % (max - min + 1)) + min;
+	read(fd, rand_b, size);
 	close(fd);
-	free(rand_bytes);
+	return (rand_b);
+}
+
+t_uint64	rand_uint64(t_uint64 min, t_uint64 max)
+{
+	t_byte		*rand_b;
+	t_uint64	rand_n;
+
+	rand_b = rand_bytes(8);
+	rand_n = bytes_to_uint64(rand_b);
+	rand_n = (rand_n % (max - min + 1U)) + min;
+	free(rand_b);
 	return (rand_n);
 }
 
@@ -72,14 +80,14 @@ t_buffer	genrsa(void)
 {
 	t_genrsa	genrsa_struct;
 
-	ft_putstr("Generating RSA private key, 64 bit long modulus\n");
+	ft_putsterr("Generating RSA private key, 64 bit long modulus\n");
 	genrsa_struct.p = gen_prime();
-	ft_putchar('\n');
+	ft_putsterr("\n");
 	genrsa_struct.q = genrsa_struct.p;
 	while (genrsa_struct.q == genrsa_struct.p)
 		genrsa_struct.q = gen_prime();
-	ft_putchar('\n');
+	ft_putsterr("\n");
 	genrsa_struct.e = 65537;
-	ft_putstr("e is 65537 (0x10001)\n");
+	ft_putsterr("e is 65537 (0x10001)\n");
 	return (genrsa_key(genrsa_struct));
 }

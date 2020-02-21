@@ -42,13 +42,18 @@ t_uint64	gcd_extended(t_uint64 a, t_uint64 b, t_int64 *x, t_int64 *y)
 	return (gcd);
 }
 
-t_uint64	mod_inverse(t_uint64 a, t_uint64 m)
+t_uint64	mod_inverse(t_uint64 a, t_uint64 m, t_bool handle_error)
 {
 	t_int64		x;
 	t_int64		y;
 
 	if (gcd_extended(a, m, &x, &y) != 1)
-		error(GENRSA_KEY_GCD_ERROR, "");
+	{
+		if (handle_error)
+			error(GENRSA_KEY_GCD_ERROR, "");
+		else
+			return (0);
+	}
 	return (((x % (t_int64)m) + (t_int64)m) % m);
 }
 
@@ -56,6 +61,6 @@ t_buffer	genrsa_key(t_genrsa genrsa_struct)
 {
 	genrsa_struct.n = genrsa_struct.p * genrsa_struct.q;
 	genrsa_struct.l = lcm(genrsa_struct.p - 1, genrsa_struct.q - 1);
-	genrsa_struct.d = mod_inverse(genrsa_struct.e, genrsa_struct.l);
+	genrsa_struct.d = mod_inverse(genrsa_struct.e, genrsa_struct.l, TRUE);
 	return (genrsa_key_buffer(genrsa_struct));
 }

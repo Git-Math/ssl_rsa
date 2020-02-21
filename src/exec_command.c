@@ -90,7 +90,7 @@ void	exec_opt_s(t_args *args)
 void	exec_command(t_args args)
 {
 	if (args.command == GENRSA)
-		print_rsa_key(&args, genrsa());
+		print_rsa_key(&args, genrsa(), TRUE, FALSE);
 	else if (args.command == RSA)
 		rsa(&args);
 	else

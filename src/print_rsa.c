@@ -92,5 +92,4 @@ void	print_rsa_struct_public(t_args *args, t_rsa *rsa_struct)
 	ft_putstr_fd(" (0x", args->fd);
 	ft_putuint64_hex_fd(rsa_struct->e, TRUE, args->fd);
 	ft_putstr_fd(")\n", args->fd);
-	print_rsa_struct_private0(args, rsa_struct);
 }

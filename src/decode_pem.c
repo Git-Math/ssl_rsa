@@ -13,105 +13,98 @@
 #include "ssl_rsa.h"
 #include "ssl_des.h"
 
-static t_byte g_pub_start[20] = { 0x30, 0x0D, 0x06, 0x09, 0x2A, 0x86, 0x48, \
-	0x86, 0xF7, 0x0D, 0x01, 0x01, 0x01, 0x05, 0x00, 0x03, 0x13, 0x00, 0x30, \
-	0x10 };
-
-void		get_asn1(t_args *args, t_buffer data, t_rsa *rsa_struct)
+int		get_asn1_private_begin(t_args *args, t_buffer data, t_rsa *rsa_struct)
 {
 	int		i;
 
-	if ((data.size < 32) \
-		|| ft_memcmp(data.bytes, "-----BEGIN RSA PRIVATE KEY-----\n", 32))
-		error_free_args(INVALID_RSA_PEM, "invalid beginning.\n", args);
-	i = 32;
+	i = 0;
+	while ((data.size - i >= 32) \
+		&& (!(i == 0 || data.bytes[i - 1] == '\n') \
+		|| ft_memcmp(data.bytes + i, "-----BEGIN RSA PRIVATE KEY-----\n", 32)))
+		i++;
+	if (data.size - i < 32)
+		error_free_args(INVALID_RSA_PEM, "invalid private beginning.\n", args);
+	i += 32;
+	if (data.size - i >= 51 && !ft_memcmp(data.bytes + i, \
+		"Proc-Type: 4,ENCRYPTED\nDEK-Info: DES-CBC,", 41))
+	{
+		rsa_struct->salt.size = 8;
+		rsa_struct->salt.bytes = malloc(sizeof(t_byte) * rsa_struct->salt.size);
+		ft_memcpy(rsa_struct->salt.bytes, data.bytes + i + 41, 8);
+		if (data.bytes[i + 49] != '\n' || data.bytes[i + 50] != '\n')
+			error_free_args(INVALID_RSA_PEM, "invalid des encrypt.\n", args);
+		i += 51;
+	}
+	else
+		rsa_struct->salt.size = 0;
+	return (i);
+}
+
+/*
+void	get_asn1_private_des(t_args *args, t_buffer data, t_rsa *rsa_struct)
+{
+
+}
+*/
+
+void	get_asn1_private(t_args *args, t_buffer data, t_rsa *rsa_struct)
+{
+	int		i;
+	int		si;
+
+	si = get_asn1_private_begin(args, data, rsa_struct);
+	i = si;
 	while ((i < data.size) && (data.bytes[i] != '-'))
 		i++;
 	if (((data.size - i) < 29) \
 		|| ft_memcmp(data.bytes + i, "-----END RSA PRIVATE KEY-----", 29) \
 		|| ((data.size - i - 29) > 0 && (data.bytes[i + 29] != '\n')))
-		error_free_args(INVALID_RSA_PEM, "invalid ending.\n", args);
-	rsa_struct->asn164.size = i - 32;
+		error_free_args(INVALID_RSA_PEM, "invalid private ending.\n", args);
+	rsa_struct->asn164.size = i - si;
 	rsa_struct->asn164.bytes = malloc(sizeof(t_byte) \
 										* rsa_struct->asn164.size);
 	if (rsa_struct->asn164.bytes == NULL)
 		error_free_args(MALLOC_FAILED, "", args);
-	ft_memcpy(rsa_struct->asn164.bytes, data.bytes + 32, \
+	ft_memcpy(rsa_struct->asn164.bytes, data.bytes + si, \
+				rsa_struct->asn164.size);
+	/* (rsa_struct->salt.size == 0) \
+		? */rsa_struct->asn1 = base64_decode((void *)&rsa_struct->asn164);/* \
+		: get_asn1_private_des(args, data, rsa_struct);*/
+}
+
+void	get_asn1_public(t_args *args, t_buffer data, t_rsa *rsa_struct)
+{
+	int		i;
+	int		si;
+
+	si = 0;
+	while ((data.size - si >= 27) \
+		&& (!(si == 0 || data.bytes[si - 1] == '\n') \
+		|| ft_memcmp(data.bytes + si, "-----BEGIN PUBLIC KEY-----\n", 27)))
+		si++;
+	if (data.size - si < 27)
+		error_free_args(INVALID_RSA_PEM, "invalid public beginning.\n", args);
+	i = si + 27;
+	while ((i < data.size) && (data.bytes[i] != '-'))
+		i++;
+	if (((data.size - i) < 24) \
+		|| ft_memcmp(data.bytes + i, "-----END PUBLIC KEY-----", 24) \
+		|| ((data.size - i - 24) > 0 && (data.bytes[i + 24] != '\n')))
+		error_free_args(INVALID_RSA_PEM, "invalid public ending.\n", args);
+	rsa_struct->asn164.size = i - si - 27;
+	rsa_struct->asn164.bytes = malloc(sizeof(t_byte) \
+										* rsa_struct->asn164.size);
+	if (rsa_struct->asn164.bytes == NULL)
+		error_free_args(MALLOC_FAILED, "", args);
+	ft_memcpy(rsa_struct->asn164.bytes, data.bytes + 27 + si, \
 				rsa_struct->asn164.size);
 	rsa_struct->asn1 = base64_decode((void *)&rsa_struct->asn164);
 }
 
-t_uint64	decode_asn1_value(t_args *args, t_buffer asn1, int *i)
+void	decode_pem(t_args *args, t_buffer data, t_rsa *rsa_struct)
 {
-	t_uint64	value;
-	int			size;
-
-	if (asn1.bytes[*i] != 0x02)
-		error_free_args(INVALID_RSA_ASN1, "invalid value type.\n", args);
-	(*i)++;
-	size = asn1.bytes[*i];
-	if (size > 0x09 \
-		|| (size == 0x09 && (asn1.bytes[(*i) + 1] != 0x00)) \
-		|| ((size + (*i)) >= asn1.size))
-		error_free_args(INVALID_RSA_ASN1, "value size too big.\n", args);
-	(*i)++;
-	if (size == 9)
-	{
-		size--;
-		(*i)++;
-	}
-	value = 0;
-	while (size > 0)
-	{
-		value += (t_uint64)asn1.bytes[*i] << ((size - 1) * 8);
-		size--;
-		(*i)++;
-	}
-	return (value);
-}
-//TEMP for private and public, check that we don't go out of memory, and check the end of asn1
-void		decode_asn1_private(t_args *args, t_rsa *rsa_struct)
-{
-	int		i;
-
-	if (rsa_struct->asn1.bytes[0] != 0x30)
-		error_free_args(INVALID_RSA_ASN1, "must be a sequence.\n", args);
-	if (rsa_struct->asn1.bytes[1] != (rsa_struct->asn1.size - 2))
-		error_free_args(INVALID_RSA_ASN1, "invalid sequence size.\n", args);
-	if (rsa_struct->asn1.bytes[2] != 0x02)
-		error_free_args(INVALID_RSA_ASN1, "invalid version type.\n", args);
-	if (rsa_struct->asn1.bytes[3] != 0x01)
-		error_free_args(INVALID_RSA_ASN1, "version size too big.\n", args);
-	i = 5;
-	rsa_struct->n = decode_asn1_value(args, rsa_struct->asn1, &i);
-	rsa_struct->e = decode_asn1_value(args, rsa_struct->asn1, &i);
-	rsa_struct->d = decode_asn1_value(args, rsa_struct->asn1, &i);
-	rsa_struct->p = decode_asn1_value(args, rsa_struct->asn1, &i);
-	rsa_struct->q = decode_asn1_value(args, rsa_struct->asn1, &i);
-	rsa_struct->exp1 = decode_asn1_value(args, rsa_struct->asn1, &i);
-	rsa_struct->exp2 = decode_asn1_value(args, rsa_struct->asn1, &i);
-	rsa_struct->coef = decode_asn1_value(args, rsa_struct->asn1, &i);
-}
-
-void 		decode_asn1_public(t_args *args, t_rsa *rsa_struct)
-{
-	int		i;
-
-	//TEMP fix decode, handle | to pass throw ./ft_ssl succesive
-	if (rsa_struct->asn1.bytes[0] != 0x30)
-		error_free_args(INVALID_RSA_ASN1, "must be a sequence.\n", args);
-	if (rsa_struct->asn1.bytes[1] != (rsa_struct->asn1.size - 2))
-		error_free_args(INVALID_RSA_ASN1, "invalid sequence size.\n", args);
-	if (ft_memcmp(rsa_struct->asn1.bytes + 2, g_pub_start, 20))
-		error_free_args(INVALID_RSA_ASN1, "invalid pubblic start.\n", args);
-	i = 22;
-	rsa_struct->n = decode_asn1_value(args, rsa_struct->asn1, &i);
-	rsa_struct->e = decode_asn1_value(args, rsa_struct->asn1, &i);
-}
-
-void		decode_pem(t_args *args, t_buffer data, t_rsa *rsa_struct)
-{
-	get_asn1(args, data, rsa_struct);
+	(args->opts & OPT_PUBIN) ? get_asn1_public(args, data, rsa_struct) \
+							: get_asn1_private(args, data, rsa_struct);
 	(args->opts & OPT_PUBIN) ? decode_asn1_public(args, rsa_struct) \
 							: decode_asn1_private(args, rsa_struct);
 	if (args->opts & OPT_TEXT)
@@ -123,4 +116,6 @@ void		decode_pem(t_args *args, t_buffer data, t_rsa *rsa_struct)
 		ft_putuint64_hex_fd(rsa_struct->n, FALSE, args->fd);
 		ft_putstr_fd("\n", args->fd);
 	}
+	if (args->opts & OPT_CHECK)
+		check_rsa_key(args, rsa_struct);
 }

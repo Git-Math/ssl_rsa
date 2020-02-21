@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "ssl_des.h"
+#include "ssl_rsa.h"
 
 void	get_pass_salt(t_args *args, t_buffer *salt)
 {
@@ -22,8 +23,12 @@ void	get_pass_salt(t_args *args, t_buffer *salt)
 			error_free_args(INVALID_PASSWORD, "", args);
 	}
 	if (!(args->opts & OPT_SD))
-		args->salt.size = 0;
-	*salt = buffer_hex_to_byte(args, args->salt, 8);
+	{
+		salt->size = 8;
+		salt->bytes = rand_bytes(salt->size);
+	}
+	else
+		*salt = buffer_hex_to_byte(args, args->salt, 8);
 }
 
 void	set_key_iv(t_args *args, t_des *des_struct, t_buffer dk)

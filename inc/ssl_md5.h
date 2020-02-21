@@ -58,7 +58,9 @@ enum						e_error
 	INVALID_RSA_INPUT_FILE = 23,
 	INVALID_RSA_PEM = 24,
 	INVALID_RSA_ASN1 = 25,
-	PUBIN_CHECK = 26
+	PUBIN_CHECK = 26,
+	INVALID_RSA_KEY = 27
+
 };
 
 enum						e_command

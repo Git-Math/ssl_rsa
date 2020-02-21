@@ -28,6 +28,7 @@ void	set_mem_data(int ac, t_args *args, int *i)
 											* (DATA_SIZE_MAX + 1));
 		if (args->data[args->i].bytes == NULL)
 			error(MALLOC_FAILED, "");
+		usleep(100 * 1000);
 		args->data[args->i].size = read(0, args->data[args->i].bytes \
 										, DATA_SIZE_MAX + 1);
 		if (args->data[args->i].size > DATA_SIZE_MAX)
