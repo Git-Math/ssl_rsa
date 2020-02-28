@@ -12,6 +12,32 @@
 
 #include "ssl_rsa.h"
 
+void	error_rsa1(enum e_error e, char *s)
+{
+	if (e == INVALID_RSAUTL_OPTS)
+	{
+		ft_putsterr("ft_ssl: rsautl: Error: '");
+		ft_putsterr(s);
+		ft_putsterr("' is an invalid option.\n\nft_ssl rsautl [-in file] \
+[-out file] [-inkey file] [-pubin] [-encrypt] [-decrypt] [-hexdump]\n");
+	}
+	else if (e == PUBIN_DECRYPT)
+		ft_putsterr("ft_ssl: rsautl: Error: a private key is needed for \
+this operation\n");
+	else if (e == OPT_INKEY_NO_FILE)
+		ft_putsterr("ft_ssl: Error: option -inkey with no file name.\n\
+\nusage: ft_ssl command -inkey inkey_file.pem\n");
+	else if (e == RSAUTL_NO_INKEY)
+		ft_putsterr("ft_ssl: rsautl: Error: no keyfile specified\n");
+	else if (e == INVALID_RSAUTL_INKEY_FILE)
+		ft_putsterr("ft_ssl: rsautl: Error: invalid inkey file\n");
+	else if (e == RSAUTL_DATA_TOO_BIG)
+		ft_putsterr("ft_ssl: rsautl: Error: data size too big, size max: 8\n");
+	else if (e == RSAUTL_DATA_GREATER_THAN_MODULUS)
+		ft_putsterr("ft_ssl: rsautl: Error: data binary must me less than \
+modulus\n");
+}
+
 void	error_rsa0(enum e_error e, char *s)
 {
 	if (e == OPT_PASS_NO_VALUE)
@@ -34,6 +60,8 @@ big, size max: 1 048 576.\n");
 		ft_putsterr("Only private keys can be checked\n");
 	else if (e == INVALID_RSA_KEY)
 		ft_putsterr("ft_ssl: rsa: Error: invalid rsa key\n");
+	else
+		error_rsa1(e, s);
 }
 
 void	error_rsa(enum e_error e, char *s)

@@ -41,9 +41,10 @@ void	get_opts(int ac, char **av, t_args *args, int *i)
 	args->i = 0;
 	while (*i < ac && av[*i][0] == '-')
 	{
-		if (ft_strlen(av[*i]) != 2 && args->command != RSA)
+		if (ft_strlen(av[*i]) != 2 \
+			&& args->command != RSA && args->command != RSAUTL)
 			error(INVALID_OPTS, av[*i]);
-		if (args->command >= GENRSA)
+		if (args->command >= GENRSA && args->command <= RSAUTL)
 			get_opts_rsa(av, args, i);
 		else if (args->command <= SHA512)
 			get_opts_mdc(av, args, i);
@@ -51,14 +52,11 @@ void	get_opts(int ac, char **av, t_args *args, int *i)
 			get_opts_des(av, args, i);
 		*i += 1;
 	}
-	if (args->command == RSA && *i < ac)
-		error(INVALID_RSA_OPTS, av[*i]);
-	if (args->command == GENRSA && *i < ac)
-		error(INVALID_GENRSA_OPTS, av[*i]);
-	if (args->command == BASE64 && *i < ac)
-		error(INVALID_BASE64_OPTS, av[*i]);
-	if (args->command >= DES_ECB && *i < ac)
-		error(INVALID_DES_OPTS, av[*i]);
+	args->command == RSAUTL && *i < ac ? error(INVALID_RSAUTL_OPTS, av[*i]) : 0;
+	args->command == RSA && *i < ac ? error(INVALID_RSA_OPTS, av[*i]) : 0;
+	args->command == GENRSA && *i < ac ? error(INVALID_GENRSA_OPTS, av[*i]) : 0;
+	args->command == BASE64 && *i < ac ? error(INVALID_BASE64_OPTS, av[*i]) : 0;
+	args->command >= DES_ECB && *i < ac ? error(INVALID_DES_OPTS, av[*i]) : 0;
 	if (*i == ac && !(args->opts & OPT_S) && !(args->opts & OPT_I))
 		args->opts = args->opts | OPT_NO;
 }
@@ -117,6 +115,7 @@ t_args	get_args(int ac, char **av)
 	get_opts_kpsv(ac, av, &args);
 	get_opts_form(ac, av, &args);
 	get_opts_pass(ac, av, &args);
+	get_opts_inkey(ac, av, &args);
 	get_filenames(ac, av, &args, &i);
 	return (args);
 }

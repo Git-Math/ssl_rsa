@@ -28,7 +28,7 @@ void	set_mem_data(int ac, t_args *args, int *i)
 											* (DATA_SIZE_MAX + 1));
 		if (args->data[args->i].bytes == NULL)
 			error(MALLOC_FAILED, "");
-		usleep(100 * 1000);
+		usleep(200 * 1000);
 		args->data[args->i].size = read(0, args->data[args->i].bytes \
 										, DATA_SIZE_MAX + 1);
 		if (args->data[args->i].size > DATA_SIZE_MAX)
@@ -81,4 +81,10 @@ int		ft_memcmp(const void *s1, const void *s2, size_t n)
 		}
 	}
 	return (0);
+}
+
+void	ft_bzero(void *s, size_t n)
+{
+	while (n > 0)
+		((t_byte *)s)[(n--) - 1] = 0;
 }

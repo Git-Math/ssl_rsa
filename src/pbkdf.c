@@ -26,16 +26,19 @@ void	get_pass_salt(t_args *args, t_buffer *salt)
 	{
 		salt->size = 8;
 		salt->bytes = rand_bytes(salt->size);
+		if (args->command == RSA || args->command == RSAUTL)
+			args->salt = *salt;
 	}
 	else
 		*salt = buffer_hex_to_byte(args, args->salt, 8);
 }
 
-void	set_key_iv(t_args *args, t_des *des_struct, t_buffer dk)
+void	set_key_iv(t_args *args, t_des *des_struct, t_buffer dk, t_buffer salt)
 {
 	if (!(args->opts & OPT_K))
 	{
-		des_struct->key.size = args->command >= DES3_ECB ? 24 : 8;
+		des_struct->key.size = (args->command >= DES3_ECB \
+			&& args->command <= DES3_OFB) ? 24 : 8;
 		des_struct->key.bytes = malloc(sizeof(t_byte) * des_struct->key.size);
 		ft_memcpy(des_struct->key.bytes, dk.bytes, des_struct->key.size);
 	}
@@ -43,8 +46,11 @@ void	set_key_iv(t_args *args, t_des *des_struct, t_buffer dk)
 	{
 		des_struct->iv.size = 8;
 		des_struct->iv.bytes = malloc(sizeof(t_byte) * des_struct->iv.size);
-		ft_memcpy(des_struct->iv.bytes, dk.bytes + des_struct->key.size, \
-			des_struct->iv.size);
+		if (args->command != RSA && args->command != RSAUTL)
+			ft_memcpy(des_struct->iv.bytes, dk.bytes + des_struct->key.size, \
+				des_struct->iv.size);
+		else
+			ft_memcpy(des_struct->iv.bytes, salt.bytes, des_struct->iv.size);
 	}
 }
 
@@ -91,10 +97,11 @@ void	pbkdf(t_args *args, t_des *des_struct)
 	md5_struct = set_md5_struct(md5_data);
 	md5_res = md5(md5_struct);
 	ft_memcpy(dk.bytes + 16, md5_res.bytes, 16);
+	set_key_iv(args, des_struct, dk, salt);
 	free_md5_struct(md5_struct);
 	free(md5_data.bytes);
 	free(md5_res.bytes);
-	free(salt.bytes);
-	set_key_iv(args, des_struct, dk);
+	if (args->command != RSA && args->command != RSAUTL)
+		free(salt.bytes);
 	free(dk.bytes);
 }

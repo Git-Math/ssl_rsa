@@ -93,6 +93,8 @@ void	exec_command(t_args args)
 		print_rsa_key(&args, genrsa(), TRUE, FALSE);
 	else if (args.command == RSA)
 		rsa(&args);
+	else if (args.command == RSAUTL)
+		rsautl(&args);
 	else
 	{
 		exec_opt_p(&args);

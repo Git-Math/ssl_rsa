@@ -84,6 +84,35 @@ void	get_opts_rsa_c(char **av, t_args *args, int *i)
 		get_opts_rsa_c0(av, args, i);
 }
 
+void	get_opts_rsautl(char **av, t_args *args, int *i)
+{
+	if (ft_strlen(av[*i]) == 3 && !ft_memcmp(av[*i], "-in", 3))
+	{
+		args->opts = args->opts | OPT_I;
+		*i += 1;
+	}
+	else if (ft_strlen(av[*i]) == 4 && !ft_memcmp(av[*i], "-out", 4))
+	{
+		args->opts = args->opts | OPT_O;
+		*i += 1;
+	}
+	else if (ft_strlen(av[*i]) == 6 && !ft_memcmp(av[*i], "-inkey", 6))
+	{
+		args->opts = args->opts | OPT_INKEY;
+		*i += 1;
+	}
+	else if (ft_strlen(av[*i]) == 6 && !ft_memcmp(av[*i], "-pubin", 6))
+		args->opts = args->opts | OPT_PUBIN;
+	else if (ft_strlen(av[*i]) == 8 && !ft_memcmp(av[*i], "-encrypt", 8))
+		args->opts = args->opts & ~OPT_D;
+	else if (ft_strlen(av[*i]) == 8 && !ft_memcmp(av[*i], "-decrypt", 8))
+		args->opts = args->opts | OPT_D;
+	else if (ft_strlen(av[*i]) == 8 && !ft_memcmp(av[*i], "-hexdump", 8))
+		args->opts = args->opts | OPT_HEXDUMP;
+	else
+		error(INVALID_RSAUTL_OPTS, av[*i]);
+}
+
 void	get_opts_rsa(char **av, t_args *args, int *i)
 {
 	if (args->command == GENRSA)
@@ -93,5 +122,11 @@ void	get_opts_rsa(char **av, t_args *args, int *i)
 		get_opts_rsa_c(av, args, i);
 		if ((args->opts & OPT_PUBIN) && (args->opts & OPT_CHECK))
 			error(PUBIN_CHECK, "");
+	}
+	else if (args->command == RSAUTL)
+	{
+		get_opts_rsautl(av, args, i);
+		if ((args->opts & OPT_PUBIN) && (args->opts & OPT_D))
+			error(PUBIN_DECRYPT, "");
 	}
 }

@@ -12,16 +12,17 @@
 
 #include "ssl_rsa.h"
 
-t_uint64	bytes_to_uint64(t_byte *bytes)
+t_uint64	bytes_to_uint64(t_byte *bytes, int size)
 {
 	t_uint64	n;
 	int			i;
 
 	n = 0;
 	i = 0;
-	while (i < 8)
+	while (i < size)
 	{
-		n += (t_uint64)(bytes[i] << (i * 8));
+		n <<= 8;
+		n += (t_uint64)(bytes[i]);
 		i++;
 	}
 	return (n);
@@ -47,7 +48,7 @@ t_uint64	rand_uint64(t_uint64 min, t_uint64 max)
 	t_uint64	rand_n;
 
 	rand_b = rand_bytes(8);
-	rand_n = bytes_to_uint64(rand_b);
+	rand_n = bytes_to_uint64(rand_b, 8);
 	rand_n = (rand_n % (max - min + 1U)) + min;
 	free(rand_b);
 	return (rand_n);

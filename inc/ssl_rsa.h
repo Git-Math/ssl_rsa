@@ -31,9 +31,7 @@ struct						s_genrsa
 struct						s_rsa
 {
 	t_buffer				asn164;
-	t_buffer				asn1_des;
 	t_buffer				asn1;
-	t_buffer				salt;
 	t_uint64				n;
 	t_uint64				e;
 	t_uint64				d;
@@ -82,5 +80,17 @@ void						check_rsa_key(t_args *args, t_rsa *rsa_struct);
 t_uint64					gcd(t_uint64 a, t_uint64 b);
 t_uint64					lcm(t_uint64 a, t_uint64 b);
 t_byte						*rand_bytes(int size);
+void						set_data(t_args *args, t_buffer *data);
+void						set_fd(t_args *args);
+void						get_opts_inkey(int ac, char **av, t_args *args);
+void						rsautl(t_args *args);
+t_uint64					bytes_to_uint64(t_byte *bytes, int size);
+t_uint64					mod_pow(t_uint128 n, t_uint128 p, t_uint128 m);
+void						ft_bzero(void *s, size_t n);
+void						rsautl_uint64_to_bytes(t_uint64 n, \
+							t_byte *bytes);
+void						rsautl_uint64_to_bytes(t_uint64 n, \
+							t_byte *bytes);
+void						print_hexdump(t_buffer buff, int fd);
 
 #endif

@@ -38,11 +38,11 @@ void	set_pass(char **av, char opt, t_args *args, const int i)
 	if (opt == 'i')
 	{
 		args->passin.bytes = (t_byte *)av[i];
-		args->passout.size = ft_strlen(av[i]);
+		args->passin.size = ft_strlen(av[i]);
 	}
 	else if (opt == 'o')
 	{
-		args->passin.bytes = (t_byte *)av[i];
+		args->passout.bytes = (t_byte *)av[i];
 		args->passout.size = ft_strlen(av[i]);
 	}
 }
@@ -65,6 +65,31 @@ void	get_opts_pass(int ac, char **av, t_args *args)
 			else if (ft_strlen(av[i]) >= DATA_SIZE_MAX)
 				error_free_args(OPT_PASS_TOO_BIG, "", args);
 			set_pass(av, av[i - 1][5], args, i);
+		}
+		i += 1;
+	}
+}
+
+void	get_opts_inkey(int ac, char **av, t_args *args)
+{
+	int	i;
+
+	if (!(args->opts & OPT_INKEY))
+		return ;
+	i = 2;
+	while (i < ac)
+	{
+		if (ft_strlen(av[i]) == 6 && !ft_memcmp(av[i], "-inkey", 6))
+		{
+			i += 1;
+			if (i == ac)
+				error_free_args(OPT_INKEY_NO_FILE, "", args);
+			else if (ft_strlen(av[i]) == 0)
+				error_free_args(OPT_INKEY_NO_FILE, "", args);
+			else if (ft_strlen(av[i]) >= FILENAME_SIZE_MAX)
+				error_free_args(FILENAME_TOO_BIG, "", args);
+			args->inkey_file.bytes = (t_byte *)av[i];
+			args->inkey_file.size = ft_strlen(av[i]);
 		}
 		i += 1;
 	}

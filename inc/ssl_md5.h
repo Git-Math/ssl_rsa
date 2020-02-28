@@ -29,6 +29,7 @@ typedef unsigned int		t_opts;
 typedef unsigned int		t_uint32;
 typedef unsigned long int	t_uint64;
 typedef long int			t_int64;
+typedef __uint128_t			t_uint128;
 
 enum						e_error
 {
@@ -59,7 +60,14 @@ enum						e_error
 	INVALID_RSA_PEM = 24,
 	INVALID_RSA_ASN1 = 25,
 	PUBIN_CHECK = 26,
-	INVALID_RSA_KEY = 27
+	INVALID_RSA_KEY = 27,
+	INVALID_RSAUTL_OPTS = 28,
+	PUBIN_DECRYPT = 29,
+	OPT_INKEY_NO_FILE = 30,
+	RSAUTL_NO_INKEY = 31,
+	INVALID_RSAUTL_INKEY_FILE = 32,
+	RSAUTL_DATA_TOO_BIG = 33,
+	RSAUTL_DATA_GREATER_THAN_MODULUS = 34
 
 };
 
@@ -82,7 +90,8 @@ enum						e_command
 	DES3_CFB = 14,
 	DES3_OFB = 15,
 	GENRSA = 16,
-	RSA = 17
+	RSA = 17,
+	RSAUTL = 18
 };
 
 typedef struct s_buffer		t_buffer;
@@ -115,7 +124,9 @@ typedef struct s_sha512		t_sha512;
 # define OPT_CHECK			1048576
 # define OPT_PUBIN			2097152
 # define OPT_PUBOUT			4194304
-# define OPT_NO				8388608
+# define OPT_INKEY			8388608
+# define OPT_HEXDUMP		16777216
+# define OPT_NO				33554432
 
 # define DATA_SIZE_MAX		1048576
 # define FILENAME_SIZE_MAX	128
@@ -223,6 +234,7 @@ struct						s_args
 	int						opt_s_nb;
 	t_buffer				passin;
 	t_buffer				passout;
+	t_buffer				inkey_file;
 };
 
 t_args						get_args(int ac, char **av);

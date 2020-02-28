@@ -210,9 +210,9 @@ t_bool		prime_table_check(t_uint64 n, t_bool print_info)
 	return (TRUE);
 }
 
-t_uint64	mod_pow(t_uint64 n, t_uint64 p, t_uint64 m)
+t_uint64	mod_pow(t_uint128 n, t_uint128 p, t_uint128 m)
 {
-	t_uint64	r;
+	t_uint128	r;
 
 	r = 1;
 	while (p)
