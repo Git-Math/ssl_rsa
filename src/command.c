@@ -21,6 +21,12 @@ void	get_command_rsa(char **av, t_args *args)
 		args->command = RSA;
 	else if (ft_strlen(av[1]) == 6 && !ft_memcmp(av[1], "rsautl", 6))
 		args->command = RSAUTL;
+	else if (ft_strlen(av[1]) == 6 && !ft_memcmp(av[1], "gendsa", 6))
+		args->command = GENDSA;
+	else if (ft_strlen(av[1]) == 6 && !ft_memcmp(av[1], "gendes", 6))
+		args->command = GENDES;
+	else if (ft_strlen(av[1]) == 9 && !ft_memcmp(av[1], "break_rsa", 9))
+		args->command = BREAK_RSA;
 	else
 		error(INVALID_COMMAND, av[1]);
 }

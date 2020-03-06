@@ -12,6 +12,32 @@
 
 #include "ssl_rsa.h"
 
+void	error_rsa_bonus(enum e_error e, char *s)
+{
+	if (e == INVALID_GENDSA_OPTS)
+	{
+		ft_putsterr("ft_ssl: gendsa: Error: '");
+		ft_putsterr(s);
+		ft_putsterr("' is an invalid option.\n\nOptions :\n-i : input file\n\
+-o : output file\n");
+	}
+	else if (e == INVALID_GENDES_OPTS)
+	{
+		ft_putsterr("ft_ssl: gendes: Error: '");
+		ft_putsterr(s);
+		ft_putsterr("' is an invalid option.\n\nOptions :\n-i : input file\n\
+-o : output file\n");
+	}
+	else if (e == BREAK_RSA_DATA_TOO_BIG)
+		ft_putsterr("ft_ssl: break_rsa: Error: data size too big, size max: \
+8\n");
+	else if (e == BREAK_RSA_DATA_GREATER_THAN_MODULUS)
+		ft_putsterr("ft_ssl: break rsa: Error: data binary must me less than \
+modulus\n");
+	else if (e == BREAK_RSA_FAILED)
+		ft_putsterr("ft_ssl: break rsa: couldn't break message\n");
+}
+
 void	error_rsa1(enum e_error e, char *s)
 {
 	if (e == INVALID_RSAUTL_OPTS)
@@ -36,6 +62,8 @@ this operation\n");
 	else if (e == RSAUTL_DATA_GREATER_THAN_MODULUS)
 		ft_putsterr("ft_ssl: rsautl: Error: data binary must me less than \
 modulus\n");
+	else
+		error_rsa_bonus(e, s);
 }
 
 void	error_rsa0(enum e_error e, char *s)

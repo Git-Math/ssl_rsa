@@ -41,10 +41,10 @@ void	get_opts(int ac, char **av, t_args *args, int *i)
 	args->i = 0;
 	while (*i < ac && av[*i][0] == '-')
 	{
-		if (ft_strlen(av[*i]) != 2 \
-			&& args->command != RSA && args->command != RSAUTL)
+		if (ft_strlen(av[*i]) != 2 && args->command != RSA \
+			&& args->command != RSAUTL && args->command != BREAK_RSA)
 			error(INVALID_OPTS, av[*i]);
-		if (args->command >= GENRSA && args->command <= RSAUTL)
+		if (args->command >= GENRSA && args->command <= BREAK_RSA)
 			get_opts_rsa(av, args, i);
 		else if (args->command <= SHA512)
 			get_opts_mdc(av, args, i);
@@ -52,6 +52,8 @@ void	get_opts(int ac, char **av, t_args *args, int *i)
 			get_opts_des(av, args, i);
 		*i += 1;
 	}
+	args->command == GENDES && *i < ac ? error(INVALID_GENDES_OPTS, av[*i]) : 0;
+	args->command == GENDSA && *i < ac ? error(INVALID_GENDSA_OPTS, av[*i]) : 0;
 	args->command == RSAUTL && *i < ac ? error(INVALID_RSAUTL_OPTS, av[*i]) : 0;
 	args->command == RSA && *i < ac ? error(INVALID_RSA_OPTS, av[*i]) : 0;
 	args->command == GENRSA && *i < ac ? error(INVALID_GENRSA_OPTS, av[*i]) : 0;

@@ -70,7 +70,8 @@ void	get_opts_io0(int ac, char **av, t_args *args, int i)
 		error_free_args(OPT_IO_NO_FILE, "", args);
 	else if (ft_strlen(av[i]) >= FILENAME_SIZE_MAX)
 		error_free_args(FILENAME_TOO_BIG, "", args);
-	if (av[i - 1][1] == 'i' && args->command != GENRSA)
+	if (av[i - 1][1] == 'i' && args->command != GENRSA \
+		&& args->command != GENDSA && args->command != GENDES)
 	{
 		args->data[0].bytes = (t_byte *)av[i];
 		args->data[0].size = ft_strlen(av[i]);

@@ -12,7 +12,7 @@
 
 #include "ssl_rsa.h"
 
-void	get_opts_genrsa(char **av, t_args *args, int *i)
+void	get_opts_gen(char **av, t_args *args, int *i)
 {
 	if (av[*i][1] == 'i')
 	{
@@ -24,8 +24,12 @@ void	get_opts_genrsa(char **av, t_args *args, int *i)
 		args->opts = args->opts | OPT_O;
 		*i += 1;
 	}
-	else
+	else if (args->command == GENRSA)
 		error(INVALID_GENRSA_OPTS, av[*i]);
+	else if (args->command == GENDSA)
+		error(INVALID_GENDSA_OPTS, av[*i]);
+	else
+		error(INVALID_GENDES_OPTS, av[*i]);
 }
 
 void	get_opts_rsa_c0(char **av, t_args *args, int *i)
@@ -115,15 +119,16 @@ void	get_opts_rsautl(char **av, t_args *args, int *i)
 
 void	get_opts_rsa(char **av, t_args *args, int *i)
 {
-	if (args->command == GENRSA)
-		get_opts_genrsa(av, args, i);
+	if (args->command == GENRSA || args->command == GENDSA \
+								|| args->command == GENDES)
+		get_opts_gen(av, args, i);
 	else if (args->command == RSA)
 	{
 		get_opts_rsa_c(av, args, i);
 		if ((args->opts & OPT_PUBIN) && (args->opts & OPT_CHECK))
 			error(PUBIN_CHECK, "");
 	}
-	else if (args->command == RSAUTL)
+	else if (args->command == RSAUTL || args->command == BREAK_RSA)
 	{
 		get_opts_rsautl(av, args, i);
 		if ((args->opts & OPT_PUBIN) && (args->opts & OPT_D))

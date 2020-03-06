@@ -95,6 +95,12 @@ void	exec_command(t_args args)
 		rsa(&args);
 	else if (args.command == RSAUTL)
 		rsautl(&args);
+	else if (args.command == GENDSA)
+		print_dsa_key(&args, gendsa());
+	else if (args.command == GENDES)
+		print_des_key(&args, gendes());
+	else if (args.command == BREAK_RSA)
+		break_rsa(&args);
 	else
 	{
 		exec_opt_p(&args);

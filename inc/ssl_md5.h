@@ -67,8 +67,12 @@ enum						e_error
 	RSAUTL_NO_INKEY = 31,
 	INVALID_RSAUTL_INKEY_FILE = 32,
 	RSAUTL_DATA_TOO_BIG = 33,
-	RSAUTL_DATA_GREATER_THAN_MODULUS = 34
-
+	RSAUTL_DATA_GREATER_THAN_MODULUS = 34,
+	INVALID_GENDSA_OPTS = 35,
+	INVALID_GENDES_OPTS = 36,
+	BREAK_RSA_DATA_TOO_BIG = 37,
+	BREAK_RSA_DATA_GREATER_THAN_MODULUS = 38,
+	BREAK_RSA_FAILED = 39
 };
 
 enum						e_command
@@ -91,7 +95,10 @@ enum						e_command
 	DES3_OFB = 15,
 	GENRSA = 16,
 	RSA = 17,
-	RSAUTL = 18
+	RSAUTL = 18,
+	GENDSA = 19,
+	GENDES = 20,
+	BREAK_RSA = 21
 };
 
 typedef struct s_buffer		t_buffer;
@@ -294,5 +301,6 @@ t_buffer					sha384(void *hash_struct);
 t_buffer					sha512(void *hash_struct);
 t_uint32					right_rotate(t_uint32 value, t_uint32 offset);
 t_uint64					right_rotate_long(t_uint64 value, t_uint64 offset);
+void						print_buffer_hex_fd(t_buffer buff, int fd);
 
 #endif

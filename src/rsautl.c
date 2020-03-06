@@ -39,10 +39,12 @@ t_buffer	rsa_encode(t_args *args, t_buffer data, t_rsa rsa_struct)
 	ft_bzero(result.bytes, 8);
 	(result.bytes == NULL) ? error_free_args(MALLOC_FAILED, "", args) : 0;
 	m = (t_uint128)bytes_to_uint64(data.bytes, data.size);
+	ft_putuint64_fd(m, 2);
 	if (m >= rsa_struct.n)
 		error_free_args(RSAUTL_DATA_GREATER_THAN_MODULUS, "", args);
 	c = mod_pow(m, rsa_struct.e, rsa_struct.n);
 	rsautl_uint64_to_bytes(c, result.bytes);
+	result.size = rsautl_uint64_size(c);
 	return (result);
 }
 
@@ -61,6 +63,7 @@ t_buffer	rsa_decode(t_args *args, t_buffer data, t_rsa rsa_struct)
 		error_free_args(RSAUTL_DATA_GREATER_THAN_MODULUS, "", args);
 	m = mod_pow(c, rsa_struct.d, rsa_struct.n);
 	rsautl_uint64_to_bytes(m, result.bytes);
+	result.size = rsautl_uint64_size(m);
 	return (result);
 }
 
@@ -90,6 +93,7 @@ void		rsautl(t_args *args)
 	else
 		result = rsa_encode(args, data, rsa_struct);
 	print_rsa_result(args, result);
+	close(args->fd);
 	free(result.bytes);
 	free_args(args);
 }

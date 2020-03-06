@@ -23,7 +23,7 @@ void	error0(enum e_error e, char *s)
 		ft_putsterr("ft_ssl: Error: '");
 		ft_putsterr(s);
 		ft_putsterr("' is an invalid command.\n\nStandard commands :\n\
-genrsa\nrsa\nrsault\n\n\
+genrsa\nrsa\nrsault\ngendsa\ngendes\n\n\
 Message Digest commands :\nmd5\nsha224\nsha256\nsha384\nsha512\n\n\
 Cipher commands:\nbase64\ndes\ndes-ecb\ndes-cbc\ndes_pcbc\ndes-cfb\n\
 des-ofb\ndes3\ndes3-ecb\ndes3-cbc\ndes3_pcbc\ndes3-cfb\ndes3-ofb\n");

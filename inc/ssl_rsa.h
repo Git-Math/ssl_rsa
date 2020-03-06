@@ -17,6 +17,10 @@
 
 typedef struct s_genrsa		t_genrsa;
 typedef struct s_rsa		t_rsa;
+typedef struct s_gendsa		t_gendsa;
+typedef struct s_gendes		t_gendes;
+typedef struct s_node		t_node;
+typedef struct s_hash_table	t_hash_table;
 
 struct						s_genrsa
 {
@@ -40,6 +44,34 @@ struct						s_rsa
 	t_uint64				exp1;
 	t_uint64				exp2;
 	t_uint64				coef;
+};
+
+struct						s_gendsa
+{
+	t_uint64				p;
+	t_uint64				q;
+	t_uint64				g;
+	t_uint64				x;
+	t_uint64				y;
+};
+
+struct						s_gendes
+{
+	t_buffer				key;
+	t_buffer				iv;
+};
+
+struct						s_node
+{
+	t_uint64				key;
+	t_uint32				val;
+	t_node					*next;
+};
+
+struct						s_hash_table
+{
+	t_uint32				size;
+	t_node					**node_array;
 };
 
 void						error_rsa(enum e_error e, char *s);
@@ -92,5 +124,18 @@ void						rsautl_uint64_to_bytes(t_uint64 n, \
 void						rsautl_uint64_to_bytes(t_uint64 n, \
 							t_byte *bytes);
 void						print_hexdump(t_buffer buff, int fd);
+t_buffer					gendsa(void);
+void						print_dsa_key(t_args *args, t_buffer key);
+t_gendes					gendes(void);
+void						print_des_key(t_args *args, t_gendes des_struct);
+void						break_rsa(t_args *args);
+t_hash_table				*create_hash_table(t_uint32 size);
+void						free_hash_table(t_hash_table *hash_table);
+void						hash_insert(t_hash_table *hash_table, t_uint64 key,\
+							t_uint32 val);
+t_uint64					hash_search(t_hash_table *hash_table, t_uint64 key);
+void						read_inkey_file(t_args *args, t_buffer *inkey);
+void						print_rsa_result(t_args *args, t_buffer result);
+int							rsautl_uint64_size(t_uint64 n);
 
 #endif

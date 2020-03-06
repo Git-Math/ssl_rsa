@@ -33,7 +33,7 @@ t_byte		*rand_bytes(int size)
 	t_byte	*rand_b;
 	int		fd;
 
-	rand_b = (t_byte *)malloc(sizeof(t_byte) * 8);
+	rand_b = (t_byte *)malloc(sizeof(t_byte) * size);
 	(rand_b == NULL) ? error(MALLOC_FAILED, "") : 0;
 	fd = open("/dev/urandom", O_RDONLY);
 	(fd < 0) ? error(OPEN_FAILED, "") : 0;
