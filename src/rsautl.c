@@ -90,7 +90,9 @@ void		rsautl(t_args *args)
 	else
 		result = rsa_encode(args, data, rsa_struct);
 	print_rsa_result(args, result);
-	close(args->fd);
 	free(result.bytes);
+	free(data.bytes);
+	free(inkey.bytes);
 	free_args(args);
+	close(args->fd);
 }

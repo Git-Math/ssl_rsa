@@ -13,6 +13,12 @@
 #include "ssl_rsa.h"
 #include "ssl_des.h"
 
+void		free_rsa(t_args *args, t_buffer data)
+{
+	free_args(args);
+	free(data.bytes);
+}
+
 void		set_data(t_args *args, t_buffer *data)
 {
 	if (args->opts & OPT_I)
@@ -78,5 +84,5 @@ void		rsa(t_args *args)
 		print_rsa_key(args, key, \
 			!((args->opts & OPT_PUBIN) || (args->opts & OPT_PUBOUT)), TRUE);
 	}
-	free_args(args);
+	free_rsa(args, data);
 }

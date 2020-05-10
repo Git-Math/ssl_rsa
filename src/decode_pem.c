@@ -135,4 +135,6 @@ void	decode_pem(t_args *args, t_buffer data, t_rsa *rsa_struct)
 	}
 	if (args->opts & OPT_CHECK)
 		check_rsa_key(args, rsa_struct);
+	free(rsa_struct->asn1.bytes);
+	free(rsa_struct->asn164.bytes);
 }
