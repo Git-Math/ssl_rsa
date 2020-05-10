@@ -12,19 +12,9 @@
 
 #include "ssl_rsa.h"
 
-t_uint64	mod_pow_64(t_uint64 n, t_uint64 p, t_uint64 m)
+t_uint64	mult_mod(t_uint128 x, t_uint128 y, t_uint128 p)
 {
-	t_uint64	r;
-
-	r = 1;
-	while (p)
-	{
-		if (p & 1)
-			r = (r * n) % m;
-		n = (n * n) % m;
-		p >>= 1;
-	}
-	return (r);
+	return (x * y % p);
 }
 
 t_uint64	middle_search(t_hash_table *hash_table, t_rsa rsa_struct, \
@@ -34,16 +24,16 @@ t_uint64	middle_search(t_hash_table *hash_table, t_rsa rsa_struct, \
 	t_uint64	key;
 	t_uint64	val;
 
-	m2 = 0;
+	m2 = 2;
 	while (m2 < hash_table->size)
 	{
-		key = mod_inverse(mod_pow_64(m2, rsa_struct.e, rsa_struct.n)\
-			, rsa_struct.n, FALSE) * c % rsa_struct.n;
+		key = mult_mod(mod_inverse(mod_pow(m2, rsa_struct.e, rsa_struct.n)\
+				, rsa_struct.n, FALSE), c, rsa_struct.n);
 		if (key != 0)
 		{
 			val = hash_search(hash_table, key);
 			if (val != 0)
-				return (val);
+				return (val * m2);
 		}
 		m2++;
 	}
@@ -56,10 +46,10 @@ t_uint64	fill_hash_table(t_hash_table *hash_table, t_rsa rsa_struct,\
 	t_uint64	key;
 	t_uint64	val;
 
-	val = 0;
+	val = 2;
 	while (val < hash_table->size)
 	{
-		key = mod_pow_64(val, rsa_struct.e, rsa_struct.n);
+		key = mod_pow(val, rsa_struct.e, rsa_struct.n);
 		if (key == c)
 			return (val);
 		hash_insert(hash_table, key, val);
@@ -87,9 +77,10 @@ t_buffer	break_rsa_decode(t_args *args, t_buffer data, t_rsa rsa_struct)
 	if (m == 0)
 		m = middle_search(hash_table, rsa_struct, c);
 	free_hash_table(hash_table);
+	(m == 0) ? free(result.bytes) : 0;
 	if (m == 0)
 		error_free_args(BREAK_RSA_FAILED, "", args);
-	rsautl_uint64_to_bytes(m, result.bytes);
+	rsautl_uint64_to_bytes(m, &result);
 	return (result);
 }
 

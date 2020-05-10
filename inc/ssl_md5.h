@@ -30,6 +30,7 @@ typedef unsigned int		t_uint32;
 typedef unsigned long int	t_uint64;
 typedef long int			t_int64;
 typedef __uint128_t			t_uint128;
+typedef __int128_t			t_int128;
 
 enum						e_error
 {

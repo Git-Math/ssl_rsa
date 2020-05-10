@@ -26,14 +26,15 @@ int		rsautl_uint64_size(t_uint64 n)
 	return (size);
 }
 
-void	rsautl_uint64_to_bytes(t_uint64 n, t_byte *bytes)
+void	rsautl_uint64_to_bytes(t_uint64 n, t_buffer *buf)
 {
 	t_uint64	size;
 
 	size = rsautl_uint64_size(n);
+	buf->size = size;
 	while (size > 0)
 	{
-		bytes[size - 1] = n & 0xFF;
+		buf->bytes[size - 1] = n & 0xFF;
 		n >>= 8;
 		size--;
 	}

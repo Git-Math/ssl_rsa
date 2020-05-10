@@ -33,6 +33,22 @@ t_hash_table	*create_hash_table(t_uint32 size)
 
 void			free_hash_table(t_hash_table *hash_table)
 {
+	t_uint32	i;
+	t_node		*current_node;
+	t_node		*node_to_free;
+
+	i = 0;
+	while (i < hash_table->size)
+	{
+		current_node = hash_table->node_array[i];
+		while (current_node)
+		{
+			node_to_free = current_node;
+			current_node = current_node->next;
+			free(node_to_free);
+		}
+		i++;
+	}
 	free(hash_table->node_array);
 	free(hash_table);
 }
@@ -46,13 +62,15 @@ void			hash_insert(t_hash_table *hash_table, t_uint64 key, \
 	t_uint32 val)
 {
 	t_uint32	hash_index;
-	t_node		new_node;
+	t_node		*new_node;
 
 	hash_index = calc_hash_index(hash_table, key);
-	new_node.key = key;
-	new_node.val = val;
-	new_node.next = hash_table->node_array[hash_index];
-	hash_table->node_array[hash_index] = &new_node;
+	new_node = (t_node *)malloc(sizeof(t_node));
+	(new_node == NULL) ? error(MALLOC_FAILED, "") : 0;
+	new_node->key = key;
+	new_node->val = val;
+	new_node->next = hash_table->node_array[hash_index];
+	hash_table->node_array[hash_index] = new_node;
 }
 
 t_uint64		hash_search(t_hash_table *hash_table, t_uint64 key)

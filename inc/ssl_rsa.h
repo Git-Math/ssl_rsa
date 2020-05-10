@@ -119,10 +119,7 @@ void						rsautl(t_args *args);
 t_uint64					bytes_to_uint64(t_byte *bytes, int size);
 t_uint64					mod_pow(t_uint128 n, t_uint128 p, t_uint128 m);
 void						ft_bzero(void *s, size_t n);
-void						rsautl_uint64_to_bytes(t_uint64 n, \
-							t_byte *bytes);
-void						rsautl_uint64_to_bytes(t_uint64 n, \
-							t_byte *bytes);
+void						rsautl_uint64_to_bytes(t_uint64 n, t_buffer *buf);
 void						print_hexdump(t_buffer buff, int fd);
 t_buffer					gendsa(void);
 void						print_dsa_key(t_args *args, t_buffer key);
