@@ -1,8 +1,11 @@
 # SSL RSA
-SSL RSA is a cryptographic library that implements openssl [standard](#Standard) commands, [message digest](#Message digest) commands and [cipher](#cipher) commands from scratch.
+SSL RSA is a cryptographic library that implements openssl [standard](#Standard) commands, [message digest](#Message-digest) commands and [cipher](#cipher) commands from scratch.
 
 ## How to compile
 From the root of the repository run `make`
+
+## How to run
+After [compiling](#How-to-compile), from the root repository run `./ft_ssl [command] [options]`.
 
 ## Standard
 
@@ -108,7 +111,7 @@ des only:
 -v : initialization vector in hex is the next argument
 ```
 
-### Example
+### Examples
 ```
 $ echo "Alice's Secret" | ./ft_ssl base64
 QWxpY2UncyBTZWNyZXQK
